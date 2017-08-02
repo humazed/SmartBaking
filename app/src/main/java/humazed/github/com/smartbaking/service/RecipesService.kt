@@ -19,7 +19,7 @@ interface RecipesService {
             val retrofit = Retrofit.Builder()
                     .addConverterFactory(MoshiConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .baseUrl("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking")
+                    .baseUrl("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/")
                     .build()
 
             return retrofit.create(RecipesService::class.java)
