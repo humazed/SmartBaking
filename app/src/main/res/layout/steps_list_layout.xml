@@ -15,17 +15,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/ingredientsTextView"
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:lineSpacingExtra="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:cardCornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="da\nfsdf\nfsdfs\nsfsfs\ndasda\nfsdf\nfsdfs\nsfsfs\ndasda\nfsdf\nfsdfs\nsfsfs\ndas"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/ingredientsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:lineSpacingExtra="8dp"
+                android:padding="4dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/white"
+                tools:text="da\nfsdf\nfsdfs\nsfsfs\ndasda\nfsdf\nfsdfs\nsfsfs\ndasda\nfsdf\nfsdfs\nsfsfs\ndas"/>
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/stepsRecyclerView"
@@ -37,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ingredientsTextView"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
             tools:layout_editor_absoluteY="100dp"
             tools:listitem="@layout/recipe_list_content"/>
 

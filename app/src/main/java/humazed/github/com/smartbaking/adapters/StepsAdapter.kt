@@ -17,12 +17,7 @@ class StepsAdapter(steps: List<Step>) :
 
         result.apply {
             helper.apply {
-                setText(R.id.nameTextView, shortDescription)
-
-//                Glide.with(mContext)
-//                        .load(image)
-//                        .apply(RequestOptions().placeholder(R.drawable.ic_cake_white_24dp))
-//                        .into(getView<ImageView>(R.id.recipeImageView))
+                setText(R.id.nameTextView, "${id + 1}- $shortDescription")
             }
         }
 
