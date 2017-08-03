@@ -5,8 +5,10 @@ import io.mironov.smuggler.AutoParcelable
 
 
 @SuppressLint("ParcelCreator")
-data class Step(val id: Int,
-                val shortDescription: String,
-                val description: String,
-                val videoURL: String,
-                val thumbnailURL: String) : AutoParcelable
+data class Step(
+        val id: Int,
+        val shortDescription: String,
+        val description: String,
+        val videoURL: String,
+        val thumbnailURL: String
+) : AutoParcelable

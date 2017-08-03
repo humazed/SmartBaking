@@ -18,6 +18,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.step_details.StepsListActivity"
+            android:label="@string/title_recipe_list"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="humazed.github.com.smartbaking.ui.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".ui.step_details.StepDetailActivity"
+            android:label="@string/title_recipe_detail"
+            android:parentActivityName=".ui.step_details.StepsListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.step_details.StepsListActivity"/>
+        </activity>
     </application>
 
 </manifest>

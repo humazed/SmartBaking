@@ -4,6 +4,12 @@ import android.annotation.SuppressLint
 import io.mironov.smuggler.AutoParcelable
 
 @SuppressLint("ParcelCreator")
-data class Ingredient(val quantity: String,
-                      val measure: String,
-                      val ingredient: String) : AutoParcelable
+data class Ingredient(
+        val quantity: String,
+        val measure: String,
+        val ingredient: String
+) : AutoParcelable {
+    override fun toString(): String {
+        return "* $quantity $measure of $ingredient \n"
+    }
+}

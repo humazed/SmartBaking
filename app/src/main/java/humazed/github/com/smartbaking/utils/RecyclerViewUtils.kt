@@ -11,5 +11,5 @@ import org.jetbrains.anko.dip
 fun Context.calculateSpanCount(): Int {
     val displayMetrics = resources.displayMetrics
     val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-    return (dpWidth / dip(70)).toInt()
+    return (dpWidth / dip(130)).toInt()
 }

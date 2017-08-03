@@ -13,7 +13,7 @@ import humazed.github.com.smartbaking.model.Recipe
  * User: YourPc
  * Date: 7/22/2017
  */
-class RecipesAdapter(result: List<Recipe>?) :
+class RecipesAdapter(result: List<Recipe>) :
         BaseQuickAdapter<Recipe, BaseViewHolder>(R.layout.row_recipe, result) {
 
     override fun convert(helper: BaseViewHolder, result: Recipe) {
