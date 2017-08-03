@@ -26,9 +26,9 @@ import humazed.github.com.smartbaking.R
 import humazed.github.com.smartbaking.model.Step
 import humazed.github.com.smartbaking.utils.hideSystemUI
 import kotlinx.android.synthetic.main.activity_step_detail.*
+import kotlinx.android.synthetic.main.step_detail.*
 import kotlinx.android.synthetic.main.step_detail.view.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
 
 class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
     val TAG: String = StepDetailFragment::class.java.simpleName
@@ -50,9 +50,6 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
     var mMediaSession: MediaSessionCompat? = null
     var mStateBuilder: PlaybackStateCompat.Builder? = null
 
-    lateinit var mExoPlayerView: SimpleExoPlayerView
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments.containsKey(ARG_STEP)) {
@@ -64,7 +61,6 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.step_detail, container, false).apply {
             stepDescriptionTextView.text = step.description
-            mExoPlayerView = exoPlayerView
 
             if (!TextUtils.isEmpty(step.videoURL)) {
                 initializeMediaSession()
@@ -119,8 +115,8 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
     // ExoPlayer.EventListener
     ///////////////////////////////////////////////////////////////////////////
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        warn { "onPlayerStateChanged() called with: playWhenReady = [$playWhenReady], playbackState = [$playbackState]" }
         mExoPlayer?.currentPosition?.also {
+            exoPlayerView.layoutParams.height = WRAP_CONTENT
             if (playbackState == ExoPlayer.STATE_READY && playWhenReady) {
                 mStateBuilder?.setState(PlaybackStateCompat.STATE_PLAYING, it, 1f)
             } else if (playbackState == ExoPlayer.STATE_READY) {
@@ -130,49 +126,28 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
         mMediaSession?.setPlaybackState(mStateBuilder?.build())
     }
 
-    override fun onPlayerError(error: ExoPlaybackException?) {
-        warn { "onPlayerError() called with: error = [$error]" }
-    }
-
-    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
-        warn { "onPlaybackParametersChanged() called with: playbackParameters = [$playbackParameters]" }
-    }
-
-    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
-        warn { "onTracksChanged() called with: trackGroups = [$trackGroups], trackSelections = [$trackSelections]" }
-    }
-
-    override fun onLoadingChanged(isLoading: Boolean) {
-        warn { "onLoadingChanged() called with: isLoading = [$isLoading]" }
-    }
-
-    override fun onPositionDiscontinuity() {
-        warn { "onPositionDiscontinuity() called with: " }
-    }
-
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
-        warn { "onTimelineChanged() called with: timeline = [$timeline], manifest = [$manifest]" }
-    }
+    override fun onPlayerError(error: ExoPlaybackException?) {}
+    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {}
+    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {}
+    override fun onLoadingChanged(isLoading: Boolean) {}
+    override fun onPositionDiscontinuity() {}
+    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {}
 
     private inner class MySessionCallback : MediaSessionCompat.Callback() {
         override fun onPlay() {
-            warn { "onPlay() called with: " }
             mExoPlayer?.playWhenReady = true
         }
 
         override fun onPause() {
-            warn { "onPause() called with: " }
             mExoPlayer?.playWhenReady = false
         }
 
         override fun onSkipToPrevious() {
-            warn { "onSkipToPrevious() called with: " }
             mExoPlayer?.seekTo(0)
         }
     }
 
     override fun onDestroy() {
-        warn { "onDestroy() called with: " }
         super.onDestroy()
         mExoPlayer?.apply {
             stop()
