@@ -1,11 +1,9 @@
 package humazed.github.com.smartbaking.ui.step_details
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import humazed.github.com.smartbaking.R
-import kotlinx.android.synthetic.main.activity_step_detail.*
 
 /**
  * An activity representing a single Recipe detail screen. This
@@ -18,10 +16,14 @@ class StepDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_step_detail)
-        setSupportActionBar(detail_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
+        // savedInstanceState is non-null when there is fragment state
+        // saved from previous configurations of this activity
+        // (e.g. when rotating the screen from portrait to landscape).
+        // In this case, the fragment will automatically be re-added
+        // to its container so we don't need to manually add it.
+        // For more information, see the Fragments API guide at:
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                     .add(R.id.recipe_detail_container, StepDetailFragment
@@ -33,7 +35,7 @@ class StepDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == android.R.id.home) {
-            navigateUpTo(Intent(this, StepsListActivity::class.java))
+            finish()
             return true
         }
         return super.onOptionsItemSelected(item)

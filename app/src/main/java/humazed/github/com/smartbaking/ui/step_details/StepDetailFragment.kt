@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -25,8 +24,6 @@ import com.google.android.exoplayer2.util.Util
 import humazed.github.com.smartbaking.R
 import humazed.github.com.smartbaking.model.Step
 import humazed.github.com.smartbaking.utils.hideSystemUI
-import kotlinx.android.synthetic.main.activity_step_detail.*
-import kotlinx.android.synthetic.main.step_detail.*
 import kotlinx.android.synthetic.main.step_detail.view.*
 import org.jetbrains.anko.AnkoLogger
 
@@ -54,7 +51,7 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
         super.onCreate(savedInstanceState)
         if (arguments.containsKey(ARG_STEP)) {
             step = arguments.getParcelable(ARG_STEP)
-            activity.toolbar_layout?.title = step.shortDescription
+            (activity as AppCompatActivity).supportActionBar?.title = step.shortDescription
         }
     }
 
@@ -116,7 +113,6 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
     ///////////////////////////////////////////////////////////////////////////
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         mExoPlayer?.currentPosition?.also {
-            exoPlayerView.layoutParams.height = WRAP_CONTENT
             if (playbackState == ExoPlayer.STATE_READY && playWhenReady) {
                 mStateBuilder?.setState(PlaybackStateCompat.STATE_PLAYING, it, 1f)
             } else if (playbackState == ExoPlayer.STATE_READY) {

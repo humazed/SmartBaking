@@ -1,17 +1,14 @@
 package humazed.github.com.smartbaking.ui.step_details
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.NavUtils.navigateUpFromSameTask
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import humazed.github.com.smartbaking.R
 import humazed.github.com.smartbaking.adapters.StepsAdapter
 import humazed.github.com.smartbaking.model.Recipe
 import humazed.github.com.smartbaking.model.Step
 import humazed.github.com.smartbaking.ui.MainActivity
-import kotlinx.android.synthetic.main.activity_steps_list.*
 import kotlinx.android.synthetic.main.steps_list_layout.*
 import org.jetbrains.anko.startActivity
 
@@ -34,24 +31,18 @@ class StepsListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_steps_list)
-        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.title = title
+        supportActionBar?.title = title
 
         mTwoPane = resources.getBoolean(R.bool.isTablet)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        intent.getParcelableExtra<Recipe>(MainActivity.KEY_RECIPE)?.also {
+            ingredientsTextView.text = it.ingredients
+                    .map { it.toString() }
+                    .reduce { acc, s -> acc + s }
+
+            setupRecyclerView(it.steps)
         }
-
-        val recipe = intent.getParcelableExtra<Recipe>(MainActivity.KEY_RECIPE)
-
-        ingredientsTextView.text = recipe.ingredients
-                .map { it.toString() }
-                .reduce { acc, s -> acc + s }
-
-        setupRecyclerView(recipe.steps)
     }
 
     private fun setupRecyclerView(steps: List<Step>) {
@@ -65,10 +56,8 @@ class StepsListActivity : AppCompatActivity() {
             } else {
                 startActivity<StepDetailActivity>(KEY_STEP to step)
             }
-
         }
         stepsRecyclerView.adapter = adapter
-        stepsRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
