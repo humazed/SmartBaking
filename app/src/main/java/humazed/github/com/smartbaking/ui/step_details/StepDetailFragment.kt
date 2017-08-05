@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import humazed.github.com.smartbaking.R
 import humazed.github.com.smartbaking.model.Step
+import humazed.github.com.smartbaking.utils.gone
 import humazed.github.com.smartbaking.utils.hideSystemUI
 import kotlinx.android.synthetic.main.step_detail.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -64,11 +65,11 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
                 initializePlayer(Uri.parse(step.videoURL), exoPlayerView)
                 if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && !resources.getBoolean(R.bool.isTablet)) {
                     hideSystemUI(activity as AppCompatActivity)
-                    stepDescriptionTextView.visibility = View.GONE
+                    stepDescriptionTextView.gone()
                     exoPlayerView.layoutParams.height = MATCH_PARENT
                     exoPlayerView.layoutParams.width = MATCH_PARENT
                 } else stepDescriptionTextView.text = step.description
-            } else exoPlayerView.visibility = View.GONE
+            } else exoPlayerView.gone()
         }
     }
 
