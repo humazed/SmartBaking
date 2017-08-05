@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import humazed.github.com.smartbaking.R
+import humazed.github.com.smartbaking.model.Step
 
 /**
  * An activity representing a single Recipe detail screen. This
@@ -25,12 +26,13 @@ class StepDetailActivity : AppCompatActivity() {
         // to its container so we don't need to manually add it.
         // For more information, see the Fragments API guide at:
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.recipe_detail_container, StepDetailFragment
-                            .newInstance(intent.getParcelableExtra(StepsListActivity.KEY_STEP)))
-                    .commit()
+            val position = intent.getIntExtra(StepsListActivity.KEY_POSITION, 0)
+            intent.getParcelableArrayListExtra<Step>(StepsListActivity.KEY_STEPS)?.also {
+                StepDetailFragment.start(this, it, position)
+            }
         }
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId

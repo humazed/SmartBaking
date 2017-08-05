@@ -21,12 +21,13 @@ import org.jetbrains.anko.startActivity
  * item details side-by-side using two vertical panes.
  */
 class StepsListActivity : AppCompatActivity() {
-
     companion object {
-        val KEY_STEP = "StepsListActivity:step"
+        val KEY_STEPS = "StepsListActivity:mStep"
+        val KEY_POSITION = "StepsListActivity:mPosition"
     }
 
     private var mTwoPane: Boolean = false
+    lateinit var recipe: Recipe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,25 +37,22 @@ class StepsListActivity : AppCompatActivity() {
 
         mTwoPane = resources.getBoolean(R.bool.isTablet)
 
-        intent.getParcelableExtra<Recipe>(MainActivity.KEY_RECIPE)?.also {
+        recipe = intent.getParcelableExtra<Recipe>(MainActivity.KEY_RECIPE).also {
             ingredientsTextView.text = it.ingredients
                     .map { it.toString() }
-                    .reduce { acc, s -> acc + s }
+                    .reduce { acc, s -> acc + s } //to concat the ingredients in one string
 
-            setupRecyclerView(it.steps)
+            setupRecyclerView(ArrayList(it.steps))
         }
     }
 
-    private fun setupRecyclerView(steps: List<Step>) {
+    private fun setupRecyclerView(steps: ArrayList<Step>) {
         val adapter = StepsAdapter(steps)
         adapter.setOnItemClickListener { _, _, position ->
-            val step = steps[position]
             if (mTwoPane) {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.recipe_detail_container, StepDetailFragment.newInstance(step))
-                        .commit()
+                StepDetailFragment.start(this, steps, position)
             } else {
-                startActivity<StepDetailActivity>(KEY_STEP to step)
+                startActivity<StepDetailActivity>(KEY_STEPS to steps, KEY_POSITION to position)
             }
         }
         stepsRecyclerView.adapter = adapter

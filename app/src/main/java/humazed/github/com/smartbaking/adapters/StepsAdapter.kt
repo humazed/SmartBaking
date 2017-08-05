@@ -7,7 +7,6 @@ import humazed.github.com.smartbaking.model.Step
 import humazed.github.com.smartbaking.utils.inVisible
 import kotlinx.android.synthetic.main.row_step.view.*
 
-
 /**
  * User: YourPc
  * Date: 7/22/2017

@@ -1,7 +1,6 @@
 package humazed.github.com.smartbaking.utils
 
 import android.content.Context
-import org.jetbrains.anko.dip
 
 /**
  * User: YourPc
@@ -11,5 +10,5 @@ import org.jetbrains.anko.dip
 fun Context.calculateSpanCount(): Int {
     val displayMetrics = resources.displayMetrics
     val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-    return (dpWidth / dip(130)).toInt()
+    return (dpWidth / 130).toInt()
 }

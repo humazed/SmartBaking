@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v7.app.AppCompatActivity
@@ -25,50 +26,83 @@ import humazed.github.com.smartbaking.R
 import humazed.github.com.smartbaking.model.Step
 import humazed.github.com.smartbaking.utils.gone
 import humazed.github.com.smartbaking.utils.hideSystemUI
-import kotlinx.android.synthetic.main.step_detail.view.*
+import kotlinx.android.synthetic.main.fragment_step_detail.view.*
 import org.jetbrains.anko.AnkoLogger
 
 class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
     val TAG: String = StepDetailFragment::class.java.simpleName
 
     companion object {
-        val ARG_STEP = "StepDetailFragment:step"
+        val TAG = "StepDetailFragment:tag"
+        val ARG_STEPS = "StepDetailFragment:mSteps"
+        val ARG_POSITION = "StepDetailFragment:mPosition"
 
-        fun newInstance(step: Step): StepDetailFragment {
+        fun newInstance(steps: ArrayList<Step>, position: Int): StepDetailFragment {
             val fragment = StepDetailFragment()
             val args = Bundle()
-            args.putParcelable(ARG_STEP, step)
+            args.putParcelableArrayList(ARG_STEPS, steps)
+            args.putInt(ARG_POSITION, position)
             fragment.arguments = args
             return fragment
         }
+
+        fun start(activity: FragmentActivity, it: ArrayList<Step>, position: Int) {
+            activity.supportFragmentManager.beginTransaction()
+                    .add(R.id.recipe_detail_container, StepDetailFragment.newInstance(it, position), TAG)
+                    .commit()
+        }
+
+        fun switchTo(activity: FragmentActivity, it: ArrayList<Step>, position: Int) {
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.recipe_detail_container, StepDetailFragment.newInstance(it, position), TAG)
+                    .commit()
+        }
     }
 
-    lateinit var step: Step
+    var mPosition: Int = 0
+    lateinit var mSteps: ArrayList<Step>
+    val mStep: Step by lazy { mSteps[mPosition] }
+
     var mExoPlayer: SimpleExoPlayer? = null
     var mMediaSession: MediaSessionCompat? = null
     var mStateBuilder: PlaybackStateCompat.Builder? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments.containsKey(ARG_STEP)) {
-            step = arguments.getParcelable(ARG_STEP)
-            (activity as AppCompatActivity).supportActionBar?.title = step.shortDescription
+        if (arguments.containsKey(ARG_STEPS)) {
+            mPosition = arguments.getInt(ARG_POSITION)
+            mSteps = arguments.getParcelableArrayList<Step>(ARG_STEPS)
+            (activity as AppCompatActivity).supportActionBar?.title = mStep.shortDescription
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.step_detail, container, false).apply {
-            stepDescriptionTextView.text = step.description
+        return inflater!!.inflate(R.layout.fragment_step_detail, container, false).apply {
+            stepDescriptionTextView.text = mStep.description
 
-            if (!TextUtils.isEmpty(step.videoURL)) {
+            when (mPosition) {
+                0 -> previousFab.gone()
+                mSteps.size - 1 -> nextFab.gone()
+            }
+
+            nextFab.setOnClickListener {
+                switchTo(activity, mSteps, mStep.id + 1)
+            }
+
+            previousFab.setOnClickListener {
+                switchTo(activity, mSteps, mStep.id - 1)
+            }
+
+            if (!TextUtils.isEmpty(mStep.videoURL)) {
                 initializeMediaSession()
-                initializePlayer(Uri.parse(step.videoURL), exoPlayerView)
+                initializePlayer(Uri.parse(mStep.videoURL), exoPlayerView)
                 if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && !resources.getBoolean(R.bool.isTablet)) {
                     hideSystemUI(activity as AppCompatActivity)
                     stepDescriptionTextView.gone()
                     exoPlayerView.layoutParams.height = MATCH_PARENT
                     exoPlayerView.layoutParams.width = MATCH_PARENT
-                } else stepDescriptionTextView.text = step.description
+                } else stepDescriptionTextView.text = mStep.description
             } else exoPlayerView.gone()
         }
     }
@@ -152,5 +186,4 @@ class StepDetailFragment : Fragment(), AnkoLogger, ExoPlayer.EventListener {
             mExoPlayer = null
         }
     }
-
 }
